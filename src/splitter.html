@@ -8,14 +8,21 @@
         body {
             font-family: Arial, sans-serif;
             margin: 20px;
+            background-color: #121212; /* Dark mode background */
+            color: #ffffff; /* Dark mode text color */
         }
         h1 {
-            color: #333;
+            color: #ffffff;
         }
         textarea {
             width: 100%;
             height: 150px;
             margin-bottom: 10px;
+            white-space: pre-wrap; /* Ensure text wraps */
+            word-wrap: break-word; /* Break long words */
+            background-color: #2c2c2c; /* Dark mode textarea background */
+            color: #ffffff; /* Dark mode textarea text color */
+            border: 1px solid #444; /* Dark mode textarea border */
         }
         button {
             padding: 10px 20px;
@@ -25,27 +32,68 @@
             border: none;
             border-radius: 5px;
             cursor: pointer;
+            margin-right: 10px;
         }
         button:hover {
             background-color: #0056b3;
         }
+        .chunk-container {
+            margin-bottom: 20px;
+        }
         pre {
-            white-space: pre-wrap; /* Allows text to wrap and maintains formatting */
-            background: #f4f4f4;
+            white-space: pre-wrap; /* Ensure text wraps */
+            word-wrap: break-word; /* Break long words */
+            background: #2c2c2c; /* Dark mode pre background */
+            color: #ffffff; /* Dark mode pre text color */
             padding: 10px;
             border-radius: 5px;
+            border: 1px solid #444; /* Dark mode pre border */
             overflow: auto;
+        }
+        .copy-btn {
+            display: block;
+            margin-top: 5px;
+            background-color: #28a745;
+            border: none;
+            border-radius: 5px;
+            color: white;
+            cursor: pointer;
+            padding: 10px 20px;
+        }
+        .copy-btn:hover {
+            background-color: #218838;
+        }
+        nav {
+            background-color: #333; /* Dark mode nav background */
+            color: #ffffff; /* Dark mode nav text color */
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        nav a {
+            color: #ffffff; /* Dark mode nav link color */
+            text-decoration: none;
+            margin-right: 10px;
+        }
+        nav a:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
 <body>
+    <nav>
+        <a href="index.html">Home</a>
+        <a href="splitter.html">Splitter</a>
+        <a href="reassemble.html">Reassembler</a>
+    </nav>
+
     <h1>eCash Text Splitter</h1>
     
     <textarea id="inputText" placeholder="Paste your eCash payment text here..."></textarea>
     <button onclick="splitText()">Split Text</button>
     
     <h2>Output Chunks</h2>
-    <pre id="outputChunks"></pre>
+    <div id="outputChunks"></div>
     
     <script>
         function splitText() {
@@ -54,7 +102,7 @@
             const chunks = [];
             
             // Calculate the hash of the text
-            const hash = crypto.subtle.digest('SHA-256', new TextEncoder().encode(text))
+            crypto.subtle.digest('SHA-256', new TextEncoder().encode(text))
                 .then(hashBuffer => {
                     const hashArray = Array.from(new Uint8Array(hashBuffer));
                     const hashHex = hashArray.map(byte => byte.toString(16).padStart(2, '0')).join('');
@@ -76,8 +124,29 @@
                         chunks.push(chunk);
                     }
                     
-                    // Display the chunks
-                    document.getElementById('outputChunks').textContent = chunks.join('\n\n---\n\n');
+                    // Display the chunks with copy buttons
+                    const outputChunksDiv = document.getElementById('outputChunks');
+                    outputChunksDiv.innerHTML = ''; // Clear previous output
+                    chunks.forEach((chunk, index) => {
+                        const chunkContainer = document.createElement('div');
+                        chunkContainer.className = 'chunk-container';
+                        
+                        const pre = document.createElement('pre');
+                        pre.textContent = chunk;
+                        chunkContainer.appendChild(pre);
+                        
+                        const copyButton = document.createElement('button');
+                        copyButton.textContent = 'Copy Chunk ' + (index + 1);
+                        copyButton.className = 'copy-btn';
+                        copyButton.onclick = () => {
+                            navigator.clipboard.writeText(chunk)
+                                .then(() => alert('Chunk copied to clipboard!'))
+                                .catch(err => console.error('Error copying text: ', err));
+                        };
+                        chunkContainer.appendChild(copyButton);
+                        
+                        outputChunksDiv.appendChild(chunkContainer);
+                    });
                 })
                 .catch(err => console.error('Error calculating hash:', err));
         }

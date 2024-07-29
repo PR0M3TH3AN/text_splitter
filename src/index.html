@@ -8,69 +8,121 @@
         body {
             font-family: Arial, sans-serif;
             margin: 20px;
+            background-color: #121212; /* Dark mode background */
+            color: #ffffff; /* Dark mode text color */
         }
-        h1, h2 {
-            color: #333;
+        h1 {
+            color: #ffffff;
         }
-        p {
-            line-height: 1.6;
+        textarea {
+            width: 100%;
+            height: 100px;
+            margin-bottom: 10px;
+            white-space: pre-wrap; /* Ensure text wraps */
+            word-wrap: break-word; /* Break long words */
+            background-color: #2c2c2c; /* Dark mode textarea background */
+            color: #ffffff; /* Dark mode textarea text color */
+            border: 1px solid #444; /* Dark mode textarea border */
         }
-        .section {
-            margin-bottom: 20px;
-        }
-        .section p {
-            margin: 0 0 10px;
-        }
-        .link-btn {
-            display: inline-block;
-            margin: 5px 0;
-            padding: 10px 15px;
+        button {
+            padding: 10px 20px;
             font-size: 16px;
             color: white;
             background-color: #007bff;
-            text-decoration: none;
+            border: none;
             border-radius: 5px;
+            cursor: pointer;
+            margin-right: 10px;
         }
-        .link-btn:hover {
+        button:hover {
             background-color: #0056b3;
+        }
+        #messageFields {
+            margin-top: 10px;
+        }
+        .message-field {
+            margin-bottom: 10px;
+        }
+        #output {
+            white-space: pre-wrap; /* Ensure text wraps */
+            word-wrap: break-word; /* Break long words */
+            background: #2c2c2c; /* Dark mode output background */
+            color: #ffffff; /* Dark mode output text color */
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 10px;
+            border: 1px solid #444; /* Dark mode output border */
+        }
+        .error {
+            color: #ff6b6b; /* Dark mode error color */
+        }
+        #hashResult {
+            margin-top: 10px;
+            padding: 10px;
+            background: #e9ecef;
+            border-radius: 5px;
+            color: #000000; /* Light mode text color for hash result */
+        }
+        nav {
+            background-color: #333; /* Dark mode nav background */
+            color: #ffffff; /* Dark mode nav text color */
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        nav a {
+            color: #ffffff; /* Dark mode nav link color */
+            text-decoration: none;
+            margin-right: 10px;
+        }
+        nav a:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
 <body>
-    <h1>eCash Text Splitter & Reassembler</h1>
-    
-    <div class="section">
-        <h2>How to Use the eCash Text Splitter</h2>
-        <p>This tool helps you split a large eCash payment text into smaller, manageable parts that can be sent over Meshtastic. Each part will include a prefix indicating its sequence and a hash for integrity verification.</p>
-        <p>To use the text splitter:</p>
-        <ol>
-            <li>Go to the <a class="link-btn" href="splitter.html">eCash Text Splitter Tool</a>.</li>
-            <li>Paste your eCash payment text into the text area.</li>
-            <li>Click the "Split Text" button. The text will be divided into chunks of up to 150 characters.</li>
-            <li>Each chunk will include a prefix with its sequence number and, for the first chunk, a hash of the entire text.</li>
-            <li>Copy each chunk and send them as separate messages.</li>
-        </ol>
-    </div>
+    <nav>
+        <a href="index.html">Home</a>
+        <a href="splitter.html">Splitter</a>
+        <a href="reassemble.html">Reassembler</a>
+    </nav>
 
-    <div class="section">
-        <h2>How to Reassemble the eCash Payment</h2>
-        <p>To reassemble the split eCash payment text and verify its integrity:</p>
-        <ol>
-            <li>Go to the <a class="link-btn" href="reassemble.html">eCash Text Reassembler Tool</a>.</li>
-            <li>Paste all received message chunks into the provided text area.</li>
-            <li>The tool will automatically reorder the messages, combine them, and check the hash for integrity verification.</li>
-            <li>If the hash matches, you will get the original text back. If not, verify the chunks for completeness and correct order.</li>
-        </ol>
-    </div>
+    <div class="container">
+        <div class="header">
+            <h1>eCash Text Splitter & Reassembler</h1>
+        </div>
+        
+        <div class="section">
+            <h2>How to Use the eCash Text Splitter</h2>
+            <p>This tool helps you split a large eCash payment text into smaller, manageable parts that can be sent over Meshtastic. Each part will include a prefix indicating its sequence and a hash for integrity verification.</p>
+            <p>To use the text splitter:</p>
+            <ol>
+                <li>Go to the <a href="splitter.html">eCash Text Splitter Tool</a>.</li>
+                <li>Paste your eCash payment text into the text area.</li>
+                <li>Click the "Split Text" button. The text will be divided into chunks of up to 150 characters.</li>
+                <li>Each chunk will include a prefix with its sequence number and, for the first chunk, a hash of the entire text.</li>
+                <li>Copy each chunk and send them as separate messages.</li>
+            </ol>
+        </div>
 
-    <div class="section">
-        <h2>Links</h2>
-        <p>Access the tools and repository below:</p>
-        <ul>
-            <li><a class="link-btn" href="splitter.html">eCash Text Splitter Tool</a></li>
-            <li><a class="link-btn" href="reassemble.html">eCash Text Reassembler Tool</a></li>
-            <li><a class="link-btn" href="https://github.com/PR0M3TH3AN/text_splitter">GitHub Repository</a></li>
-        </ul>
+        <div class="section">
+            <h2>How to Reassemble the eCash Payment</h2>
+            <p>To reassemble the split eCash payment text and verify its integrity:</p>
+            <ol>
+                <li>Go to the <a href="reassemble.html">eCash Text Reassembler Tool</a>.</li>
+                <li>Paste all received message chunks into the provided text area.</li>
+                <li>The tool will automatically reorder the messages, combine them, and check the hash for integrity verification.</li>
+                <li>If the hash matches, you will get the original text back. If not, verify the chunks for completeness and correct order.</li>
+            </ol>
+        </div>
+
+        <div class="section">
+            <h2>Links</h2>
+            <p>Access the repository below:</p>
+            <ul>
+                <li><a href="https://github.com/PR0M3TH3AN/text_splitter">GitHub Repository</a></li>
+            </ul>
+        </div>
     </div>
 </body>
 </html>
