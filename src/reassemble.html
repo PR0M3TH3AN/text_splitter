@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>eCash Text Reassembler</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        h1 {
+            color: #333;
+        }
+        textarea {
+            width: 100%;
+            height: 150px;
+            margin-bottom: 10px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            color: white;
+            background-color: #007bff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        pre {
+            white-space: pre-wrap; /* Allows text to wrap and maintains formatting */
+            background: #f4f4f4;
+            padding: 10px;
+            border-radius: 5px;
+            overflow: auto;
+        }
+        .error {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <h1>eCash Text Reassembler</h1>
+    
+    <textarea id="inputChunks" placeholder="Paste all received message chunks here..."></textarea>
+    <button onclick="reassembleText()">Reassemble Text</button>
+    
+    <h2>Reassembled Text</h2>
+    <pre id="outputText"></pre>
+    <p id="statusMessage" class="error"></p>
+    
+    <script>
+        function reassembleText() {
+            const chunks = document.getElementById('inputChunks').value.split('\n\n---\n\n');
+            let text = '';
+            let hashReceived = '';
+            const chunkOrder = [];
+            
+            // Extract the hash from the first chunk and remove it from the text
+            chunks.forEach(chunk => {
+                const lines = chunk.split('\n');
+                if (lines[0].startsWith('Hash:')) {
+                    hashReceived = lines[0].replace('Hash: ', '').trim();
+                    text += lines.slice(2).join('\n') + '\n';
+                } else {
+                    text += chunk.replace(/^Message \d+\/\d+\n\n/, '') + '\n';
+                }
+                const match = lines[0].match(/Message (\d+)\/(\d+)/);
+                if (match) {
+                    chunkOrder[parseInt(match[1], 10) - 1] = chunk;
+                }
+            });
+            
+            // Reassemble text in order
+            const reassembledText = chunkOrder.join('\n\n---\n\n');
+            
+            // Calculate the hash of the reassembled text
+            crypto.subtle.digest('SHA-256', new TextEncoder().encode(text))
+                .then(hashBuffer => {
+                    const hashArray = Array.from(new Uint8Array(hashBuffer));
+                    const hashHex = hashArray.map(byte => byte.toString(16).padStart(2, '0')).join('');
+                    
+                    if (hashHex === hashReceived) {
+                        document.getElementById('outputText').textContent = text;
+                        document.getElementById('statusMessage').textContent = 'The reassembled text matches the original hash!';
+                        document.getElementById('statusMessage').classList.remove('error');
+                    } else {
+                        document.getElementById('outputText').textContent = '';
+                        document.getElementById('statusMessage').textContent = 'Hash mismatch! The reassembled text may be corrupted.';
+                        document.getElementById('statusMessage').classList.add('error');
+                    }
+                })
+                .catch(err => {
+                    document.getElementById('statusMessage').textContent = 'Error calculating hash: ' + err;
+                    document.getElementById('statusMessage').classList.add('error');
+                });
+        }
+    </script>
+</body>
+</html>

@@ -3,84 +3,74 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>eCash Text Splitter for Meshtastic</title>
+    <title>eCash Text Splitter & Reassembler</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             margin: 20px;
         }
-        textarea {
-            width: 100%;
-            height: 100px;
-            margin-bottom: 10px;
+        h1, h2 {
+            color: #333;
         }
-        .split-text {
+        p {
+            line-height: 1.6;
+        }
+        .section {
             margin-bottom: 20px;
         }
-        .split-text textarea {
-            height: 60px;
+        .section p {
+            margin: 0 0 10px;
         }
-        .copy-btn {
-            margin-top: 5px;
+        .link-btn {
+            display: inline-block;
+            margin: 5px 0;
+            padding: 10px 15px;
+            font-size: 16px;
+            color: white;
+            background-color: #007bff;
+            text-decoration: none;
+            border-radius: 5px;
         }
-        .repo-link {
-            margin-top: 20px;
+        .link-btn:hover {
+            background-color: #0056b3;
         }
     </style>
 </head>
 <body>
-    <h1>eCash Text Splitter for Meshtastic</h1>
-    <p>Paste your eCash text below and click "Split Text" to divide it into smaller parts of up to 150 characters each, suitable for sending over Meshtastic.</p>
-    <textarea id="inputText" placeholder="Paste your eCash text here..."></textarea>
-    <button onclick="splitText()">Split Text</button>
-    <div id="output"></div>
+    <h1>eCash Text Splitter & Reassembler</h1>
+    
+    <div class="section">
+        <h2>How to Use the eCash Text Splitter</h2>
+        <p>This tool helps you split a large eCash payment text into smaller, manageable parts that can be sent over Meshtastic. Each part will include a prefix indicating its sequence and a hash for integrity verification.</p>
+        <p>To use the text splitter:</p>
+        <ol>
+            <li>Go to the <a class="link-btn" href="splitter.html">eCash Text Splitter Tool</a>.</li>
+            <li>Paste your eCash payment text into the text area.</li>
+            <li>Click the "Split Text" button. The text will be divided into chunks of up to 150 characters.</li>
+            <li>Each chunk will include a prefix with its sequence number and, for the first chunk, a hash of the entire text.</li>
+            <li>Copy each chunk and send them as separate messages.</li>
+        </ol>
+    </div>
 
-    <script>
-        function splitText() {
-            const maxLength = 150;
-            const inputText = document.getElementById('inputText').value;
-            const outputDiv = document.getElementById('output');
-            outputDiv.innerHTML = '';
+    <div class="section">
+        <h2>How to Reassemble the eCash Payment</h2>
+        <p>To reassemble the split eCash payment text and verify its integrity:</p>
+        <ol>
+            <li>Go to the <a class="link-btn" href="reassemble.html">eCash Text Reassembler Tool</a>.</li>
+            <li>Paste all received message chunks into the provided text area.</li>
+            <li>The tool will automatically reorder the messages, combine them, and check the hash for integrity verification.</li>
+            <li>If the hash matches, you will get the original text back. If not, verify the chunks for completeness and correct order.</li>
+        </ol>
+    </div>
 
-            if (inputText.length === 0) {
-                alert('Please paste some text to split.');
-                return;
-            }
-
-            let parts = [];
-            for (let i = 0; i < inputText.length; i += maxLength) {
-                parts.push(inputText.substring(i, i + maxLength));
-            }
-
-            parts.forEach((part, index) => {
-                const partDiv = document.createElement('div');
-                partDiv.className = 'split-text';
-
-                const textArea = document.createElement('textarea');
-                textArea.readOnly = true;
-                textArea.value = part;
-
-                const copyButton = document.createElement('button');
-                copyButton.className = 'copy-btn';
-                copyButton.innerText = 'Copy';
-                copyButton.onclick = () => copyToClipboard(textArea);
-
-                partDiv.appendChild(textArea);
-                partDiv.appendChild(copyButton);
-                outputDiv.appendChild(partDiv);
-            });
-        }
-
-        function copyToClipboard(textArea) {
-            textArea.select();
-            document.execCommand('copy');
-            alert('Text copied to clipboard!');
-        }
-    </script>
-
-    <div class="repo-link">
-        <p>Find the code for this eCash Text Splitter on GitHub: <a href="https://github.com/PR0M3TH3AN/text_splitter">https://github.com/PR0M3TH3AN/text_splitter</a></p>
-        <p>Access the live version of the tool here: <a href="https://ecash-text-splitter.netlify.app/">https://ecash-text-splitter.netlify.app/</a></p>
+    <div class="section">
+        <h2>Links</h2>
+        <p>Access the tools and repository below:</p>
+        <ul>
+            <li><a class="link-btn" href="splitter.html">eCash Text Splitter Tool</a></li>
+            <li><a class="link-btn" href="reassemble.html">eCash Text Reassembler Tool</a></li>
+            <li><a class="link-btn" href="https://github.com/PR0M3TH3AN/text_splitter">GitHub Repository</a></li>
+        </ul>
     </div>
 </body>
 </html>

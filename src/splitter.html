@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>eCash Text Splitter</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        h1 {
+            color: #333;
+        }
+        textarea {
+            width: 100%;
+            height: 150px;
+            margin-bottom: 10px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            color: white;
+            background-color: #007bff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        pre {
+            white-space: pre-wrap; /* Allows text to wrap and maintains formatting */
+            background: #f4f4f4;
+            padding: 10px;
+            border-radius: 5px;
+            overflow: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>eCash Text Splitter</h1>
+    
+    <textarea id="inputText" placeholder="Paste your eCash payment text here..."></textarea>
+    <button onclick="splitText()">Split Text</button>
+    
+    <h2>Output Chunks</h2>
+    <pre id="outputChunks"></pre>
+    
+    <script>
+        function splitText() {
+            const text = document.getElementById('inputText').value;
+            const maxChunkSize = 150;
+            const chunks = [];
+            
+            // Calculate the hash of the text
+            const hash = crypto.subtle.digest('SHA-256', new TextEncoder().encode(text))
+                .then(hashBuffer => {
+                    const hashArray = Array.from(new Uint8Array(hashBuffer));
+                    const hashHex = hashArray.map(byte => byte.toString(16).padStart(2, '0')).join('');
+                    
+                    // Split the text into chunks
+                    for (let i = 0; i < text.length; i += maxChunkSize) {
+                        let chunk = text.substring(i, i + maxChunkSize);
+                        let chunkNumber = Math.floor(i / maxChunkSize) + 1;
+                        let totalChunks = Math.ceil(text.length / maxChunkSize);
+                        let prefix = `Message ${chunkNumber}/${totalChunks}`;
+                        
+                        // Add the hash only to the first chunk
+                        if (chunkNumber === 1) {
+                            chunk = `Hash: ${hashHex}\n${prefix}\n\n${chunk}`;
+                        } else {
+                            chunk = `${prefix}\n\n${chunk}`;
+                        }
+                        
+                        chunks.push(chunk);
+                    }
+                    
+                    // Display the chunks
+                    document.getElementById('outputChunks').textContent = chunks.join('\n\n---\n\n');
+                })
+                .catch(err => console.error('Error calculating hash:', err));
+        }
+    </script>
+</body>
+</html>
