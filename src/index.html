@@ -30,14 +30,14 @@
 </head>
 <body>
     <h1>eCash Text Splitter for Meshtastic</h1>
-    <p>Paste your eCash text below and click "Split Text" to divide it into smaller parts of up to 200 characters each, suitable for sending over Meshtastic.</p>
+    <p>Paste your eCash text below and click "Split Text" to divide it into smaller parts of up to 150 characters each, suitable for sending over Meshtastic.</p>
     <textarea id="inputText" placeholder="Paste your eCash text here..."></textarea>
     <button onclick="splitText()">Split Text</button>
     <div id="output"></div>
 
     <script>
         function splitText() {
-            const maxLength = 200;
+            const maxLength = 150;
             const inputText = document.getElementById('inputText').value;
             const outputDiv = document.getElementById('output');
             outputDiv.innerHTML = '';
@@ -80,6 +80,7 @@
 
     <div class="repo-link">
         <p>Find the code for this eCash Text Splitter on GitHub: <a href="https://github.com/PR0M3TH3AN/text_splitter">https://github.com/PR0M3TH3AN/text_splitter</a></p>
+        <p>Access the live version of the tool here: <a href="https://ecash-text-splitter.netlify.app/">https://ecash-text-splitter.netlify.app/</a></p>
     </div>
 </body>
 </html>
