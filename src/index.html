@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>eCash Text Splitter for Meshtastic</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        textarea {
+            width: 100%;
+            height: 100px;
+            margin-bottom: 10px;
+        }
+        .split-text {
+            margin-bottom: 20px;
+        }
+        .split-text textarea {
+            height: 60px;
+        }
+        .copy-btn {
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>eCash Text Splitter for Meshtastic</h1>
+    <p>Paste your eCash text below and click "Split Text" to divide it into smaller parts of up to 200 characters each, suitable for sending over Meshtastic.</p>
+    <textarea id="inputText" placeholder="Paste your eCash text here..."></textarea>
+    <button onclick="splitText()">Split Text</button>
+    <div id="output"></div>
+
+    <script>
+        function splitText() {
+            const maxLength = 200;
+            const inputText = document.getElementById('inputText').value;
+            const outputDiv = document.getElementById('output');
+            outputDiv.innerHTML = '';
+
+            if (inputText.length === 0) {
+                alert('Please paste some text to split.');
+                return;
+            }
+
+            let parts = [];
+            for (let i = 0; i < inputText.length; i += maxLength) {
+                parts.push(inputText.substring(i, i + maxLength));
+            }
+
+            parts.forEach((part, index) => {
+                const partDiv = document.createElement('div');
+                partDiv.className = 'split-text';
+
+                const textArea = document.createElement('textarea');
+                textArea.readOnly = true;
+                textArea.value = part;
+
+                const copyButton = document.createElement('button');
+                copyButton.className = 'copy-btn';
+                copyButton.innerText = 'Copy';
+                copyButton.onclick = () => copyToClipboard(textArea);
+
+                partDiv.appendChild(textArea);
+                partDiv.appendChild(copyButton);
+                outputDiv.appendChild(partDiv);
+            });
+        }
+
+        function copyToClipboard(textArea) {
+            textArea.select();
+            document.execCommand('copy');
+            alert('Text copied to clipboard!');
+        }
+    </script>
+</body>
+</html>
