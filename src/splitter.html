@@ -69,6 +69,9 @@
             padding: 10px;
             border-radius: 5px;
             margin-bottom: 20px;
+            display: flex;
+            justify-content: space-around; /* Align links evenly */
+            align-items: center;
         }
         nav a {
             color: #ffffff; /* Dark mode nav link color */
@@ -97,7 +100,7 @@
     
     <script>
         function splitText() {
-            const text = document.getElementById('inputText').value;
+            const text = document.getElementById('inputText').value.trim();
             const maxChunkSize = 150;
             const chunks = [];
             
