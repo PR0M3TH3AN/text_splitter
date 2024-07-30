@@ -110,20 +110,22 @@
                     const hashArray = Array.from(new Uint8Array(hashBuffer));
                     const hashHex = hashArray.map(byte => byte.toString(16).padStart(2, '0')).join('');
                     
-                    // Split the text into chunks
-                    for (let i = 0; i < text.length; i += maxChunkSize) {
+                    // Prepare the prefix for the first chunk
+                    const firstChunkPrefix = `Hash: ${hashHex}\nMessage 1/`;
+                    const firstChunkContentSize = maxChunkSize - firstChunkPrefix.length - (String(text.length).length + 2);
+                    const firstChunk = firstChunkPrefix + text.substring(0, firstChunkContentSize);
+                    
+                    // Add the first chunk to the list
+                    chunks.push(firstChunk);
+
+                    // Split the remaining text into chunks
+                    for (let i = firstChunkContentSize; i < text.length; i += maxChunkSize) {
                         let chunk = text.substring(i, i + maxChunkSize);
-                        let chunkNumber = Math.floor(i / maxChunkSize) + 1;
-                        let totalChunks = Math.ceil(text.length / maxChunkSize);
+                        let chunkNumber = Math.floor(i / maxChunkSize) + 2; // Start from the second chunk
+                        let totalChunks = Math.ceil(text.length / maxChunkSize) + 1;
                         let prefix = `Message ${chunkNumber}/${totalChunks}`;
                         
-                        // Add the hash only to the first chunk
-                        if (chunkNumber === 1) {
-                            chunk = `Hash: ${hashHex}\n${prefix}\n\n${chunk}`;
-                        } else {
-                            chunk = `${prefix}\n\n${chunk}`;
-                        }
-                        
+                        chunk = `${prefix}\n\n${chunk}`;
                         chunks.push(chunk);
                     }
                     
