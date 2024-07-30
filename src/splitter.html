@@ -111,7 +111,12 @@
                     const hashHex = hashArray.map(byte => byte.toString(16).padStart(2, '0')).join('');
                     
                     // Calculate the total number of chunks
-                    const totalChunks = Math.ceil((text.length + `Hash: ${hashHex}\nMessage 1/1\n\n`.length) / maxChunkSize);
+                    const initialPrefix = `Hash: ${hashHex}\nMessage 1/1\n\n`;
+                    const remainingLength = text.length - (maxChunkSize - initialPrefix.length);
+                    const additionalChunks = Math.ceil(remainingLength / (maxChunkSize - 20));
+                    const totalChunks = 1 + additionalChunks;
+
+                    // Prepare the first chunk with hash and sequence
                     const firstChunkPrefix = `Hash: ${hashHex}\nMessage 1/${totalChunks}\n\n`;
                     const firstChunkContentSize = maxChunkSize - firstChunkPrefix.length;
                     const firstChunk = firstChunkPrefix + text.substring(0, firstChunkContentSize);
@@ -122,7 +127,7 @@
                     // Split the remaining text into chunks
                     for (let i = firstChunkContentSize; i < text.length; i += (maxChunkSize - 20)) {
                         let chunk = text.substring(i, i + (maxChunkSize - 20));
-                        let chunkNumber = Math.floor(i / (maxChunkSize - 20)) + 2; // Start from the second chunk
+                        let chunkNumber = Math.floor((i - firstChunkContentSize) / (maxChunkSize - 20)) + 2; // Start from the second chunk
                         let prefix = `Message ${chunkNumber}/${totalChunks}\n\n`;
                         
                         chunk = `${prefix}${chunk}`;
